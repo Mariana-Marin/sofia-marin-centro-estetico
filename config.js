@@ -1,0 +1,4 @@
+﻿const ENV = {
+  GEMINI_API_KEY: "AIzaSyClpKYUYYL4QYIBO682YeP4ZNcNHpXOSd8",
+  FIREBASE: null
+};
