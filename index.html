@@ -717,19 +717,13 @@ textarea.fi{resize:vertical;min-height:82px;line-height:1.6}
 
 <div class="toast" id="toast"></div>
 
+<script src="config.js"></script>
 <script>
 /* ══════════ FIREBASE CONFIG ══════════
    🔧 Reemplaza con tu configuración real de Firebase:
    console.firebase.google.com → Tu proyecto → Configuración del proyecto
    ══════════════════════════════════ */
-const fbCfg = {
-  apiKey: "AIzaSyBkQiyWn73BwFBQ2JnKTCF22sUY9G6WLIg",
-  authDomain: "sofia-marin-estetica.firebaseapp.com",
-  projectId: "sofia-marin-estetica",
-  storageBucket: "sofia-marin-estetica.firebasestorage.app",
-  messagingSenderId: "525339266397",
-  appId: "1:525339266397:web:fba45707932e18581b6cb4"
-};
+const fbCfg = ENV.FIREBASE;
 let db = null, useDb = false;
 try {
   firebase.initializeApp(fbCfg);
@@ -1215,7 +1209,7 @@ Si hay contraindicación relevante, añade una nota de precaución breve al fina
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": "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", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+      headers: { "Content-Type": "application/json", "x-api-key": ENV.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
       body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 700, messages: [{ role: "user", content: prompt }] })
     });
     const d = await res.json();
@@ -1314,7 +1308,7 @@ Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": "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", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+      headers: { "Content-Type": "application/json", "x-api-key": ENV.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
       body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 700, messages: [{ role: "user", content: prompt }] })
     });
     const d = await res.json();
