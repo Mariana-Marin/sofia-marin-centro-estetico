@@ -1336,11 +1336,11 @@ Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en
 }
 
 function defPostcare(err) {
-  const errMsg = err ?  (Aviso IA: )\n\n : "";
+  const errMsg = err ? `⚠️ (Aviso IA: ${err})\n\n` : "";
 
   return `¡Hola ${F.nombre}! 🌸
 
-Gracias por tu visita hoy. Aquí tus indicaciones post ${F.tratamientoAplicado || 'tratamiento'}:
+${errMsg}Gracias por tu visita hoy. Aquí tus indicaciones post ${F.tratamientoAplicado || 'tratamiento'}:
 
 ❌ EVITA las próximas 24-48h:
 • Sol directo sin protección
