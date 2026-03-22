@@ -1211,7 +1211,7 @@ Si hay contraindicación relevante, añade una nota de precaución breve al fina
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 700 }
+        generationConfig: { maxOutputTokens: 3500 }
       })
     });
     if (!res.ok) { const errD = await res.json(); throw new Error(errD.error?.message || res.statusText); }
@@ -1322,7 +1322,7 @@ Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 700 }
+        generationConfig: { maxOutputTokens: 3500 }
       })
     });
     if (!res.ok) { const errD = await res.json(); throw new Error(errD.error?.message || res.statusText); }
