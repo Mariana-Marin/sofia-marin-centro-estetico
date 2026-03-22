@@ -1205,13 +1205,17 @@ Formato de respuesta por cada tratamiento recomendado:
 Si hay contraindicación relevante, añade una nota de precaución breve al final. Máx 220 palabras.`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const apiKey = typeof ENV !== "undefined" ? ENV.GEMINI_API_KEY : "";
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": typeof ENV !== "undefined" ? ENV.ANTHROPIC_API_KEY : "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 700, messages: [{ role: "user", content: prompt }] })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 700 }
+      })
     });
     const d = await res.json();
-    F.sugerencias = d.content?.[0]?.text || defSug();
+    F.sugerencias = d.candidates?.[0]?.content?.parts?.[0]?.text || defSug();
   } catch(e) {
     console.error('IA Error:', e);
     F.sugerencias = defSug(e.message || e);
@@ -1304,13 +1308,17 @@ Redacta un mensaje cálido, profesional y personalizado que incluya:
 Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en WhatsApp. Máx 280 palabras.`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const apiKey = typeof ENV !== "undefined" ? ENV.GEMINI_API_KEY : "";
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": typeof ENV !== "undefined" ? ENV.ANTHROPIC_API_KEY : "", "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 700, messages: [{ role: "user", content: prompt }] })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 700 }
+      })
     });
     const d = await res.json();
-    F.recomendaciones = d.content?.[0]?.text || defPostcare();
+    F.recomendaciones = d.candidates?.[0]?.content?.parts?.[0]?.text || defPostcare();
   } catch(e) {
     console.error('Postcare IA Error:', e);
     F.recomendaciones = defPostcare();
