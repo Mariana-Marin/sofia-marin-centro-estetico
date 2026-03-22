@@ -1206,7 +1206,7 @@ Si hay contraindicación relevante, añade una nota de precaución breve al fina
 
   try {
     const apiKey = typeof ENV !== "undefined" ? ENV.GEMINI_API_KEY : "";
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1214,6 +1214,7 @@ Si hay contraindicación relevante, añade una nota de precaución breve al fina
         generationConfig: { maxOutputTokens: 700 }
       })
     });
+    if (!res.ok) { const errD = await res.json(); throw new Error(errD.error?.message || res.statusText); }
     const d = await res.json();
     F.sugerencias = d.candidates?.[0]?.content?.parts?.[0]?.text || defSug();
   } catch(e) {
@@ -1224,7 +1225,14 @@ Si hay contraindicación relevante, añade una nota de precaución breve al fina
 }
 
 function defSug(err) {
-  return `⚠️ Sin conexión a IA en este momento.\n\nBasándose en el diagnóstico:\n• Condiciones: ${F.condiciones.join(', ') || 'No especificadas'}\n• Zona: ${F.zona || 'General'}\n\nSelecciona manualmente el tratamiento más apropiado de la lista de abajo.`;
+  return `⚠️ Sin conexión a IA en este momento.
+(Detalle del error: ${err || 'Desconocido'})
+
+Basándose en el diagnóstico:
+• Condiciones: ${F.condiciones.join(', ') || 'No especificadas'}
+• Zona: ${F.zona || 'General'}
+
+Selecciona manualmente el tratamiento más apropiado de la lista de abajo.`;
 }
 
 /* S5: Consent */
@@ -1309,7 +1317,7 @@ Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en
 
   try {
     const apiKey = typeof ENV !== "undefined" ? ENV.GEMINI_API_KEY : "";
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1317,16 +1325,19 @@ Usa emojis apropiados. Tono: cálido, cercano, profesional. Listo para copiar en
         generationConfig: { maxOutputTokens: 700 }
       })
     });
+    if (!res.ok) { const errD = await res.json(); throw new Error(errD.error?.message || res.statusText); }
     const d = await res.json();
     F.recomendaciones = d.candidates?.[0]?.content?.parts?.[0]?.text || defPostcare();
   } catch(e) {
     console.error('Postcare IA Error:', e);
-    F.recomendaciones = defPostcare();
+    F.recomendaciones = defPostcare('Error: ' + (e.message || e));
   }
   renderStep();
 }
 
-function defPostcare() {
+function defPostcare(err) {
+  const errMsg = err ?  (Aviso IA: )\n\n : "";
+
   return `¡Hola ${F.nombre}! 🌸
 
 Gracias por tu visita hoy. Aquí tus indicaciones post ${F.tratamientoAplicado || 'tratamiento'}:
